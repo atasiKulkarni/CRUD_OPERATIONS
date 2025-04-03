@@ -1,0 +1,97 @@
+.modal-window {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  background: rgba(0, 0, 0, 0.5);
+}
+.modal-window:target {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-window > div {
+  width: 400px;
+  position: absolute;
+  border-radius: 1rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2em;
+  background: white;
+}
+.modal-window header {
+  font-weight: bold;
+}
+.modal-window h1 {
+  font-size: 150%;
+  margin: 0 0 15px;
+}
+.edit-product-modal-container {
+  width: 35%;
+  font-family: Poppins;
+}
+.edit-product-modal-header {
+  display: flex;
+  border-bottom: 1px solid #008e97;
+  justify-content: space-between;
+}
+.edit-product-header-text {
+  font-size: 22px;
+  font-weight: 500;
+  color: #008e97;
+}
+.modal-close {
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+}
+.modal-close:hover {
+  color: black;
+}
+.close-icon {
+  width: 25px;
+  height: 25pxs;
+}
+.close-icon path {
+  stroke: white !important;
+}
+.product_form .form-label {
+  font-size: 16px;
+}
+.modal-button {
+  margin: 20px 0px;
+  display: flex;
+}
+.edit-button-container {
+  padding: 10px 15px;
+  display: flex;
+  margin-top: 0px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  color: white !important;
+  background: #008e97 !important;
+  flex-wrap: wrap;
+  border-radius: 5px;
+  height: auto;
+  font-family: Poppins;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.edit-product-modal-header a {
+  background-color: #008e97;
+}
+.edit_product:focus {
+  border: 1px solid #008e97 !important;
+  box-shadow: none !important;
+}
