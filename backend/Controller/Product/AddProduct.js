@@ -17,6 +17,8 @@ const AddProduct = function (req, res)
     else if(person){
       res.status(400).send({
         message: "Product Already Exist",
+        error_code:400,
+
       });
     }
     else{
@@ -43,7 +45,7 @@ const AddProduct = function (req, res)
           }
           else
           {
-            res.status(201).send({
+            res.status(200).send({
                 message: "Product Created Successfully",
                 error_code:200,
                 result,

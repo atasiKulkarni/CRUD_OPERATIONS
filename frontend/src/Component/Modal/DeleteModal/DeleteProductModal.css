@@ -1,48 +1,7 @@
-.modal-window {
-  position: fixed;
-  background-color: rgba(255, 255, 255, 0.25);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s;
-  background: rgba(0, 0, 0, 0.5);
-}
-.modal-window:target {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-}
-.modal-window > div {
-  width: 400px;
-  position: absolute;
-  border-radius: 1rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 2em;
-  background: white;
-}
-.modal-window header {
-  font-weight: bold;
-}
-.modal-window h1 {
-  font-size: 150%;
-  margin: 0 0 15px;
-}
-.add-product-modal-container {
-  width: 35%;
-  font-family: Poppins;
-}
 .delete-product-modal-header {
   display: flex;
-  border-bottom: 1px solid red;
-  justify-content: space-between;
-  padding: 0px !important;
+  justify-content: center;
+  padding: 5px 0px !important;
 }
 .delete-product-header-text {
   font-size: 18px !important;
@@ -53,7 +12,6 @@
   width: 25px;
   height: 25px;
 }
-
 .delete-close-icon {
   width: 25px;
   height: 25px;
@@ -93,7 +51,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .cancel-button-container {
   padding: 10px 0px;
   font-size: 12px;
@@ -104,7 +61,31 @@
   font-family: Poppins;
 }
 .buttons-container {
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   margin: 20px 0px;
+}
+.delete_product_modal {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.delete-product-modal-container {
+  width: 30% !important;
+  font-family: Poppins;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  max-height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling */
 }

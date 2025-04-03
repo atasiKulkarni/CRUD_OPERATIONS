@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { GrFormClose } from "react-icons/gr";
-import $ from "jquery";
 import axios from "axios";
 import "../EditModal/EditProductModal.css";
 
-export default function EditProductModal(productId) {
+export default function EditProductModal({ productId, setMessage }) {
   const [prodName, updateProdName] = useState("");
   const [prodImage, updateProdImage] = useState("");
   const [prodDetails, updateProdDetails] = useState("");
   const [prodPrice, updateProdPrice] = useState("");
   const [prodQuantity, updateProdQuantity] = useState("");
   const [prodTotal, updateProdTotal] = useState("");
-  const [editMessage, updateEditMessage] = useState("");
-  const Product_Id = productId.productId;
 
   function totalPrice(e) {
     updateProdQuantity(e.target.value);
@@ -23,7 +20,7 @@ export default function EditProductModal(productId) {
   // get single product details API
   async function getSingleProductDetail() {
     const userResponse = await axios.get(
-      `${process.env.REACT_APP_API_KEY}/get_single_product/${Product_Id}`,
+      `${process.env.REACT_APP_API_KEY}/get_single_product/${productId}`,
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -50,8 +47,8 @@ export default function EditProductModal(productId) {
     formData.append("prod_price", prodPrice);
     formData.append("prod_quantity", prodQuantity);
     formData.append("prod_total", prodTotal);
-    const userEditResponse = await axios.put(
-      `${process.env.REACT_APP_API_KEY}/edit_product/${Product_Id}`,
+    const response = await axios.put(
+      `${process.env.REACT_APP_API_KEY}/edit_product/${productId}`,
       formData,
       {
         headers: {
@@ -60,23 +57,21 @@ export default function EditProductModal(productId) {
       }
     );
 
-    updateEditMessage(userEditResponse.data.message);
-    if (userEditResponse.status === 200) {
-      setTimeout(() => {
-        $("#edit-modal").hide();
-        window.location.href = "/";
-      }, 1000);
+    if (response.status === 200) {
+      setMessage(response.data.message); // Send message to Home.js
+    } else {
+      setMessage("Failed to edit product.");
     }
   }
 
   useEffect(() => {
-    if (Product_Id) {
+    if (productId) {
       getSingleProductDetail();
     }
-  }, [Product_Id]);
+  }, [productId]);
 
   return (
-    <div id="edit-modal" class="modal-window">
+    <div class="edit_product_modal">
       <div className="edit-product-modal-container">
         <div className="edit-product-modal-header">
           <h1 className="edit-product-header-text">EDIT PRODUCT</h1>
@@ -104,20 +99,29 @@ export default function EditProductModal(productId) {
               Product Image
             </label>
 
- {/* Show existing image if available */}
- {prodImage && (
-    <img
-      src={typeof prodImage === "string" ? prodImage : URL.createObjectURL(prodImage)}
-      alt="Product Preview"
-      style={{ width: "100px", height: "100px", objectFit: "cover", marginBottom: "10px", display: "block" }}
-    />
-  )}
+            {/* Show existing image if available */}
+            {prodImage && (
+              <img
+                src={
+                  typeof prodImage === "string"
+                    ? prodImage
+                    : URL.createObjectURL(prodImage)
+                }
+                alt="Product Preview"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  objectFit: "cover",
+                  marginBottom: "10px",
+                  display: "block",
+                }}
+              />
+            )}
 
             <input
               type="file"
               class="form-control edit_product"
               id="product_image"
-              // value={prodImage}
               onChange={(e) => updateProdImage(e.target.files[0])}
             />
           </div>
@@ -179,20 +183,10 @@ export default function EditProductModal(productId) {
               type="button"
               className="edit-button-container "
               onClick={() => editDetails()}
-              defaultValue="Sign Up"
             >
               Update
             </button>
           </div>
-          <p
-            style={{
-              fontSize: "16px",
-              fontWeight: "500",
-              color: "#1e90ff",
-            }}
-          >
-            {editMessage}
-          </p>
         </form>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
@@ -10,7 +10,7 @@ import moment from "moment";
 import AddProductModal from "./Modal/AddProduct/AddProductModal";
 import EditProductModal from "./Modal/EditModal/EditProductModal";
 import DeleteProductModal from "./Modal/DeleteModal/DeleteProductModal";
-
+import ModalContainer from "./ModalContainer";
 const Input = styled.input.attrs((props) => ({
   type: "text",
   size: props.small ? 5 : undefined,
@@ -39,7 +39,7 @@ const customStyles = {
       padding: "10px",
       fontWeight: "bold",
       fontSize: "14px",
-      color: "black",
+      color: "#4d4d80",
       fontFamily: "Poppins",
     },
   },
@@ -59,7 +59,21 @@ export function Home() {
   const [productId, updateProductId] = useState("");
   const [deleteId, updateDeleteId] = useState("");
   const [filterText, setFilterText] = React.useState("");
+  const [message, updateMessage] = useState(""); // State to store message
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [showEditProductModal, setShowEditProductModal] = useState(false);
+  const [showDeleteProductModal, setShowDeleteProductModal] = useState(false);
 
+  const [showMessageModal, setShowMessageModal] = useState(false);
+
+  const EditProduct = (productId) => {
+    setShowEditProductModal(true);
+    updateProductId(productId);
+  };
+  function deleteSingleProduct(product_id) {
+    setShowDeleteProductModal(true);
+    updateDeleteId(product_id);
+  }
   const columns = [
     {
       name: "Image",
@@ -140,23 +154,21 @@ export function Home() {
       cell: (row) => {
         return (
           <div className="action-container">
-            <a href="#edit-modal">
-              <button
-                className="action_buttons"
-                onClick={() => updateProductId(row._id)}
-              >
-                <BiEdit className="edit-button" />
-              </button>
-            </a>
+            {/* edit button */}
+            <button
+              className="action_buttons"
+              onClick={() => EditProduct(row._id)}
+            >
+              <BiEdit className="edit-button" />
+            </button>
 
-            <a href="#delete-modal">
-              <button
-                className="action_buttons"
-                onClick={() => deleteSingleProduct(row._id)}
-              >
-                <RiDeleteBinFill className="delete-button" />
-              </button>
-            </a>
+            {/* delete button */}
+            <button
+              className="action_buttons"
+              onClick={() => deleteSingleProduct(row._id)}
+            >
+              <RiDeleteBinFill className="delete-button" />
+            </button>
           </div>
         );
       },
@@ -176,10 +188,6 @@ export function Home() {
     setData(response.data.result);
   }
 
-  function deleteSingleProduct(product_id) {
-    updateDeleteId(product_id);
-  }
-
   const filteredItems = data.filter(
     (item) =>
       JSON.stringify(item).toLowerCase().indexOf(filterText.toLowerCase()) !==
@@ -191,6 +199,23 @@ export function Home() {
     selectAllRowsItemText: "ALL",
   };
 
+  function handleAddProductSubmit(msg) {
+    updateMessage(msg);
+    setShowAddProductModal(false);
+    setShowMessageModal(true);
+  }
+
+  function handleEditProductSubmit(msg) {
+    updateMessage(msg);
+    setShowEditProductModal(false);
+    setShowMessageModal(true);
+  }
+
+  function handleDeleteProductSubmit(msg) {
+    updateMessage(msg);
+    setShowDeleteProductModal(false);
+    setShowMessageModal(true);
+  }
   useEffect(() => {
     fetchProductDetails();
   }, []);
@@ -201,17 +226,13 @@ export function Home() {
         <p className="header-text">CRUD OPERATIONS</p>
 
         <div className="sub-header-container">
-          <div>
-            <a href="#open-modal">
-              <button
-                type="button"
-                className="button-container"
-                defaultValue="Sign Up"
-              >
-                + Add Product
-              </button>
-            </a>
-          </div>
+          <button
+            type="button"
+            className="button-container"
+            onClick={() => setShowAddProductModal(true)}
+          >
+            + Add Product
+          </button>
 
           {/* serach box */}
           <div className="search-container">
@@ -233,21 +254,31 @@ export function Home() {
           striped
           paginationPerPage={10}
           pagination
-          paginationRowsPerPageOptions={[
-            10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
-          ]}
           paginationComponentOptions={paginationComponentOptions}
-          subHeader
           highlightOnHover
           customStyles={customStyles}
           defaultSortFieldId={1}
         />
 
-        <AddProductModal />
+        {showAddProductModal && (
+          <AddProductModal setMessage={handleAddProductSubmit} />
+        )}
 
-        <EditProductModal productId={productId} />
+        {showEditProductModal && (
+          <EditProductModal
+            setMessage={handleEditProductSubmit}
+            productId={productId}
+          />
+        )}
 
-        <DeleteProductModal deleteId={deleteId} />
+        {showDeleteProductModal && (
+          <DeleteProductModal
+            deleteId={deleteId}
+            setMessage={handleDeleteProductSubmit}
+          />
+        )}
+
+        {showMessageModal && <ModalContainer updateMessage={message} />}
       </div>
     </div>
   );

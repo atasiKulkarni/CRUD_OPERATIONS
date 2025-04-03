@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { GrFormClose } from "react-icons/gr";
 import axios from "axios";
-import $ from "jquery";
 import "../AddProduct/AddProductModal.css";
 
-export default function AddProductModal() {
+export default function AddProductModal({ setMessage }) {
   const [prodName, updateProdName] = useState("");
   const [prodImage, updateProdImage] = useState("");
   const [prodDetails, updateProdDetails] = useState("");
   const [prodPrice, updateProdPrice] = useState("");
   const [prodQuantity, updateProdQuantity] = useState("");
   const [prodTotal, updateProdTotal] = useState("");
-  const [message, updateMessage] = useState("");
 
   function totalPrice(e) {
     updateProdQuantity(e.target.value);
@@ -29,7 +27,7 @@ export default function AddProductModal() {
     formData.append("prod_quantity", prodQuantity);
     formData.append("prod_total", prodTotal);
 
-    const userResponse = await axios.post(
+    const response = await axios.post(
       process.env.REACT_APP_API_KEY + "add_product",
       formData,
       {
@@ -39,22 +37,20 @@ export default function AddProductModal() {
       }
     );
 
-    updateMessage(userResponse.data.message);
-    if (userResponse.data.error_code === 200) {
-      setTimeout(() => {
-        $("#open-modal").hide();
-        window.location.href = "/";
-      }, 1000);
+    if (response.data.error_code === 200) {
+      setMessage(response.data.message); // Send message to Home.js
+    } else {
+      setMessage("Failed to add product.");
     }
   }
 
   return (
-    <div id="open-modal" className="modal-window">
+    <div className="add_product_modal">
       <div className="add-product-modal-container">
         <div className="add-product-modal-header">
           <h1 className="add-product-header-text">ADD PRODUCT</h1>
           <a href="./" title="Close" class="delete-modal-close">
-            <GrFormClose className="close-icon " />
+            <GrFormClose className="close-icon" />
           </a>
         </div>
 
@@ -77,12 +73,16 @@ export default function AddProductModal() {
               Product Image
             </label>
             {prodImage && (
-    <img
-      src={typeof prodImage === "string" ? prodImage : URL.createObjectURL(prodImage)}
-      alt="Product Preview"
-      style={{ width: "100px", height: "100px", objectFit: "cover", marginBottom: "10px", display: "block" }}
-    />
-  )}
+              <img
+                src={
+                  typeof prodImage === "string"
+                    ? prodImage
+                    : URL.createObjectURL(prodImage)
+                }
+                alt="Product Preview"
+                className="preview_image"
+              />
+            )}
             <input
               type="file"
               class="form-control add_product"
@@ -100,7 +100,6 @@ export default function AddProductModal() {
               id="product_details"
               value={prodDetails}
               onChange={(e) => updateProdDetails(e.target.value)}
-              style={{ height: "30px" }}
             />
           </div>
 
@@ -144,27 +143,14 @@ export default function AddProductModal() {
           </div>
 
           <div className="modal-button">
-            <a href="#open-modal" style={{ width: "100%" }}>
-              <button
-                type="button"
-                className="add-button-container "
-                onClick={() => addProductDetails()}
-                defaultValue="Sign Up"
-              >
-                Submit
-              </button>
-            </a>
+            <button
+              type="button"
+              className="add-button-container "
+              onClick={() => addProductDetails()}
+            >
+              Submit
+            </button>
           </div>
-
-          <p
-            style={{
-              fontSize: "14px",
-              fontWeight: "500",
-              color: "#1e90ff",
-            }}
-          >
-            {message}
-          </p>
         </form>
       </div>
     </div>

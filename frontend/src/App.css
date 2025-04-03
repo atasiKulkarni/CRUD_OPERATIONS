@@ -11,7 +11,7 @@
   font-size: 40px;
   font-weight: 500;
   color: #00004d;
-  border-bottom: 2px solid #1e90ff;
+  border-bottom: 2px solid #4d4d80;
   font-family: Poppins;
 }
 .iSAVrt {
@@ -31,8 +31,16 @@
   padding: 5px;
   background: none;
 }
-.modal-window div:not(:last-of-type) {
-  margin-bottom: 15px;
+.add_product_modal {
+  background: rgba(0, 0, 0, 0.5);
+    padding:10px;
+    position:fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    transition: all 0.3s;
 }
 .search-container {
   height: 100%;
@@ -93,7 +101,6 @@
 .action-container a {
   text-decoration: none;
 }
-
 .sub-header-container {
   display: flex;
   margin-bottom: 20px;
@@ -119,7 +126,6 @@
   align-items: center;
   justify-content: center;
 }
-
 a {
   text-decoration: none !important;
 }
