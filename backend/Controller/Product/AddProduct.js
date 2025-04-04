@@ -1,66 +1,48 @@
-
-var express = require('express');
-var router = express.Router();
-var fs = require('fs');
-var path = require('path');
 const ProductModel = require('../../Models/ProductModel');
 
+const AddProduct = async (req, res) => {
+  try {
+    const { prod_name, prod_details, prod_price, prod_quantity } = req.body;
 
-const AddProduct = function (req, res)
-{
- const date = new Date();
-  ProductModel.findOne({"prod_name":req.body.prod_name},function(err,person){
-    if(err){
-      
-        res.send(err)
-    }
-    else if(person){
-      res.status(400).send({
-        message: "Product Already Exist",
-        error_code:400,
+    // Check if product already exists
+    const existingProduct = await ProductModel.findOne({ prod_name });
 
+    if (existingProduct) {
+      return res.status(400).json({
+        message: "Product Already Exists",
+        error_code: 400,
       });
     }
-    else{
-      const userProduct = new ProductModel({
-        prod_name: req.body.prod_name,
-        prod_details: req.body.prod_details,
-        prod_price: req.body.prod_price,
-        prod_quantity: req.body.prod_quantity,
-        prod_total: req.body.prod_price * req.body.prod_quantity,
-        prod_date:date,
-        image: process.env.BACKEND_URL + req.file.path,  
-      });
 
-      // save  new product
-      userProduct.save(
-        function(error,result) 
-        {
-          if(error)
-          {
-            res.status(500).send({
-                message: "Error Creating Product",
-                error,
-              });
-          }
-          else
-          {
-            res.status(200).send({
-                message: "Product Created Successfully",
-                error_code:200,
-                result,
-              });
-          }
-        }
-      )
-    }
-  })
-  
-  
- 
+    const date = new Date();
 
-      
-       
-   
-}
+    // Build new product object
+    const newProduct = new ProductModel({
+      prod_name,
+      prod_details,
+      prod_price,
+      prod_quantity,
+      prod_total: prod_price * prod_quantity,
+      prod_date: date,
+      image: process.env.BACKEND_URL + req.file?.path, // added optional chaining
+    });
+
+    // Save to DB
+    const savedProduct = await newProduct.save();
+
+    return res.status(200).json({
+      message: "Product Added Successfully",
+      error_code: 200,
+      result: savedProduct,
+    });
+
+  } catch (error) {
+    console.error("Error while creating product:", error);
+    return res.status(500).json({
+      message: "Error Creating Product",
+      error,
+    });
+  }
+};
+
 module.exports = AddProduct;

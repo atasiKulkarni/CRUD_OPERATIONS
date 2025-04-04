@@ -8,8 +8,6 @@ const logger = require('morgan');
 require("./db/conn"); // ✅ Ensures MongoDB is connected
 
 // Import Routes
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const productDetails = require('./routes/productDetails');
 
 const app = express();
@@ -24,8 +22,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
 // ✅ Routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/product', productDetails);
 
 // ✅ Error Handling (404 Not Found)
