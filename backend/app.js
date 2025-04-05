@@ -13,7 +13,9 @@ const productDetails = require('./routes/productDetails');
 const app = express();
 
 // ✅ Middleware
-app.use(cors());
+app.use(cors(
+    origin: 'https://product-lis-ui.netlify.app/', // or Netlify URL
+));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
