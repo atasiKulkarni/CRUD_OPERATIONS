@@ -21,18 +21,10 @@ const storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 
-<<<<<<< HEAD
-
-router.get('/', (req, res) => {
-    res.send('Hello from the Product API 🚀');
-  });
-  
-=======
 router.get('/', (req, res) => {
     res.send('Hello from the Product API 🚀');
   });
 
->>>>>>> d205d7087091587a7643dc985547627ae33e18c3
 // add new product
 router.post('/add_product', upload.single('image'), AddNewProduct);
 

@@ -14,7 +14,7 @@ const app = express();
 
 // ✅ Middleware
 app.use(cors(
-    origin: 'https://product-lis-ui.netlify.app/', // or Netlify URL
+    origin = 'https://product-lis-ui.netlify.app/', // or Netlify URL
 ));
 app.use(logger('dev'));
 app.use(express.json());
