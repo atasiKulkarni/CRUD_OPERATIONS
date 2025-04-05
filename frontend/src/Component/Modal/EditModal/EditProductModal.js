@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { GrFormClose } from "react-icons/gr";
 import axios from "axios";
 import "../EditModal/EditProductModal.css";
@@ -18,25 +18,30 @@ export default function EditProductModal({ productId, setMessage }) {
   }
 
   // get single product details API
-  async function getSingleProductDetail() {
-    const userResponse = await axios.get(
-      `${process.env.REACT_APP_API_KEY}/get_single_product/${productId}`,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+  const getSingleProductDetail = useCallback(async () => {
+    try {
+      const userResponse = await axios.get(
+        `${process.env.REACT_APP_API_KEY}/get_single_product/${productId}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (userResponse.data.error_code === 200) {
+        const prodResult = userResponse.data.result;
+        updateProdName(prodResult.prod_name);
+        updateProdImage(prodResult.image);
+        updateProdDetails(prodResult.prod_details);
+        updateProdPrice(prodResult.prod_price);
+        updateProdQuantity(prodResult.prod_quantity);
+        updateProdTotal(prodResult.prod_total);
       }
-    );
-    if (userResponse.data.error_code === 200) {
-      const prodResult = userResponse.data.result;
-      updateProdName(prodResult.prod_name);
-      updateProdImage(prodResult.image);
-      updateProdDetails(prodResult.prod_details);
-      updateProdPrice(prodResult.prod_price);
-      updateProdQuantity(prodResult.prod_quantity);
-      updateProdTotal(prodResult.prod_total);
+    } catch (error) {
+      console.error("Failed to fetch single product:", error);
     }
-  }
+  }, [productId]); // 👈 Add dependencies here (productId in this case)
+  
 
   // edit product details API
   async function editDetails() {
@@ -68,7 +73,8 @@ export default function EditProductModal({ productId, setMessage }) {
     if (productId) {
       getSingleProductDetail();
     }
-  }, [productId]);
+  }, [productId, getSingleProductDetail]); // ✅ both included now
+  
 
   return (
     <div class="edit_product_modal">
