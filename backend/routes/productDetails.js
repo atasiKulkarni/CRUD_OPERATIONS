@@ -22,7 +22,10 @@ var upload = multer({storage: storage});
 
 
 
-
+router.get('/', (req, res) => {
+    res.send('Hello from the Product API 🚀');
+  });
+  
 // add new product
 router.post('/add_product', upload.single('image'), AddNewProduct);
 
@@ -30,7 +33,7 @@ router.post('/add_product', upload.single('image'), AddNewProduct);
 router.get("/get_all_product",GetAllProduct );
 
 // delete single product
-router.delete("/delete_product/:_id",DeleteSigleProduct );
+router.delete("/delete_product/:    _id",DeleteSigleProduct );
 
 // edit single product
 router.put("/edit_product/:_id",upload.single('image'),EditSigleProduct );
